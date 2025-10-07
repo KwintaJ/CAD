@@ -130,8 +130,8 @@ ruleMarkerRight = new Marker(1, 60, -60, 0);
 ruleSquareRight = new Square(0, 0, 100, 0);
 rule1 = new ProductionRule(ruleMarkerLeft, [ruleMarkerRight, ruleSquareRight]);
 
-startingSquare = new Square(150, 450, 100, 0);
-startingMarker = new Marker(1, (150 + 60), (450 - 60), 0);
+startingSquare = new Square(100, 400, 100, 0);
+startingMarker = new Marker(1, (100 + 60), (400 - 60), 0);
 
 drawing = new Drawing([startingSquare, startingMarker]);
 drawing.draw();
