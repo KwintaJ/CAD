@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trójkąt w JavaScript</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    canvas {
+      border: 1px solid #333;
+      background-color: white;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas1" width="400" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById("canvas1");
+    const ctx = canvas.getContext("2d");
+
+    // Ustal punkty trojkata
+    const x1 = 200, y1 = 50;   // góra
+    const x2 = 100, y2 = 300;  // lewy dół
+    const x3 = 300, y3 = 300;  // prawy dół
+
+    // Rysowanie sciezki
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.lineTo(x3, y3);
+    ctx.closePath();
+
+    // Obrysowanie
+    ctx.strokeStyle = "#1f3b73";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+  </script>
+</body>
+</html>
