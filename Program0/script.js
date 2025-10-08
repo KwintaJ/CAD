@@ -148,5 +148,5 @@ canvas.addEventListener("click", (event) => {
 */
 
 startingSquare = new Square([75, 425], 100, Math.PI/8);
-startingSquare.ddraw();
+startingSquare.draw();
 
