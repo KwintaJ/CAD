@@ -126,12 +126,12 @@ class Drawing {
 }
 
 ruleMarkerLeft = new Marker(1, 0, 0, 0);
-ruleMarkerRight = new Marker(1, 60, -60, 0);
+ruleMarkerRight = new Marker(1, 60, -60, Math.PI/4);
 ruleSquareRight = new Square(0, 0, 100, 0);
 rule1 = new ProductionRule(ruleMarkerLeft, [ruleMarkerRight, ruleSquareRight]);
 
 startingSquare = new Square(75, 425, 100, 0);
-startingMarker = new Marker(1, (75 + 60), (425 - 60), 0);
+startingMarker = new Marker(1, (75 + 60), (425 - 60), Math.PI/4);
 
 drawing = new Drawing([startingSquare, startingMarker]);
 drawing.draw();
