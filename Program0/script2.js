@@ -134,13 +134,13 @@ class Drawing {
 
 // zdefiniowanie reguly produkcji
 ruleMarkerLeft = new Marker(1, [0,  0], 0);
-ruleMarkerRight = new Marker(1, [60, -60], Math.PI/8);
-ruleSquareRight = new Square([0, 0], 100, 0);
+ruleMarkerRight = new Marker(1, [45, -45], Math.PI/8.2);
+ruleSquareRight = new Square([0, 0], 80, 0);
 rule1 = new ProductionRule(ruleMarkerLeft, [ruleMarkerRight, ruleSquareRight]);
 
 // zdefiniowanie obrazka startowego
-startingSquare = new Square([75, 250], 100, 0);
-startingMarker = new Marker(1, [(75 + 60), (250 - 60)], Math.PI/8);
+startingSquare = new Square([75, 250], 80, 0);
+startingMarker = new Marker(1, [(75 + 45), (250 -45)], Math.PI/8.2);
 
 // rozpoczecie rysowania
 drawing = new Drawing([startingSquare, startingMarker]);
