@@ -132,7 +132,6 @@ class Drawing {
     }
 }
 
-<<<<<<< HEAD:Program0/script.js
 ruleMarkerLeft = new Marker(1, 0, 0, 0);
 ruleMarkerRight = new Marker(1, 60, -60, Math.PI/4);
 ruleSquareRight = new Square(0, 0, 100, 0);
@@ -140,7 +139,7 @@ rule1 = new ProductionRule(ruleMarkerLeft, [ruleMarkerRight, ruleSquareRight]);
 
 startingSquare = new Square(75, 425, 100, 0);
 startingMarker = new Marker(1, (75 + 60), (425 - 60), Math.PI/4);
-=======
+
 // zdefiniowanie reguly produkcji
 ruleMarkerLeft = new Marker(1, [0,  0], 0);
 ruleMarkerRight = new Marker(1, [45, -45], Math.PI/8.2);
@@ -150,7 +149,6 @@ rule1 = new ProductionRule(ruleMarkerLeft, [ruleMarkerRight, ruleSquareRight]);
 // zdefiniowanie obrazka startowego
 startingSquare = new Square([115, 170], 80, 0);
 startingMarker = new Marker(1, [(115 + 45), (170 - 45)], Math.PI/8.2);
->>>>>>> origin/main:Program0/script2.js
 
 // rozpoczecie rysowania
 drawing = new Drawing([startingSquare, startingMarker]);
