@@ -46,10 +46,10 @@ class Square {
     draw() {
         // wyliczenie punktow kwadratu
         const points = [
-            rotate([this.p[0] - (this.a / 2) , this.p[0] - (this.a / 2)], this.p, this.f), // lewy górny
-            rotate([this.p[0] + (this.a / 2) , this.p[0] - (this.a / 2)], this.p, this.f), // prawy górny
-            rotate([this.p[0] + (this.a / 2) , this.p[0] + (this.a / 2)], this.p, this.f), // prawy dolny
-            rotate([this.p[0] - (this.a / 2) , this.p[0] + (this.a / 2)], this.p, this.f)  // lewy dolny
+            rotate([this.p[0] - (this.a / 2) , this.p[1] - (this.a / 2)], this.p, this.f), // lewy górny
+            rotate([this.p[0] + (this.a / 2) , this.p[1] - (this.a / 2)], this.p, this.f), // prawy górny
+            rotate([this.p[0] + (this.a / 2) , this.p[1] + (this.a / 2)], this.p, this.f), // prawy dolny
+            rotate([this.p[0] - (this.a / 2) , this.p[1] + (this.a / 2)], this.p, this.f)  // lewy dolny
         ];
 
         // rysowanie
