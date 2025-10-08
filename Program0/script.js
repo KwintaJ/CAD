@@ -53,7 +53,7 @@ class Square {
         ];
 
         // obrot kwadratu
-        const rotatedPoints = [
+        const rotated = [
             rotate(points[0], this.a, this.f),
             rotate(points[1], this.a, this.f),
             rotate(points[2], this.a, this.f),
