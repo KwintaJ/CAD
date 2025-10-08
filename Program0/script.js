@@ -132,18 +132,23 @@ class Drawing {
     }
 }
 
+// zdefiniowanie reguly produkcji
 ruleMarkerLeft = new Marker(1, [0,  0], 0);
 ruleMarkerRight = new Marker(1, [60, -60], 0);
 ruleSquareRight = new Square([0, 0], 100, 0);
 rule1 = new ProductionRule(ruleMarkerLeft, [ruleMarkerRight, ruleSquareRight]);
 
+// zdefiniowanie obrazka startowego
 startingSquare = new Square([250, 250], 100, 0);
 startingMarker1 = new Marker(1, [(250 + 60), (250 - 60)], 0);
 startingMarker2 = new Marker(1, [(250 - 60), (250 + 60)], Math.PI);
 
+// rozpoczecie rysowania
 drawing = new Drawing([startingSquare, startingMarker1, startingMarker2]);
 drawing.draw();
 
+// za kazdym kliknieciem myszka stosujemy regule produkcji w kazdym
+// miejscu gdzie znajdziemy dopasowanie i rysujemy nowy rysunek
 canvas.addEventListener("click", (event) => {
     drawing.generate(rule1);
     drawing.draw();
