@@ -76,7 +76,7 @@ class Drawing {
 
     // przedstawianie rysunka na kanwie
     draw() {
-        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         for(let i = 0; i < this.elements.length; i++) {
             if(this.elements[i] instanceof Square) {
                 this.elements[i].draw();
@@ -86,7 +86,6 @@ class Drawing {
 
     // generowanie kolejnego rysunka stosujac regule produkcji r
     generate(r) {
-        console.log("gen");
         let numOfElements = this.elements.length;
         for(let i = 0; i < numOfElements; i++) {
             if(this.elements[i] instanceof Marker && r.left instanceof Marker) {
@@ -145,9 +144,7 @@ startingMarker2 = new Marker(1, [(250 - 60), (250 + 60)], Math.PI);
 drawing = new Drawing([startingSquare, startingMarker1, startingMarker2]);
 drawing.draw();
 
-drawing.print();
 canvas.addEventListener("click", (event) => {
     drawing.generate(rule1);
-    drawing.print();
     drawing.draw();
 });
