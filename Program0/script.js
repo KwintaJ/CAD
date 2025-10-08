@@ -86,6 +86,7 @@ class Drawing {
 
     // generowanie kolejnego rysunka stosujac regule produkcji r
     generate(r) {
+        console.log("gen");
         let numOfElements = this.elements.length;
         for(let i = 0; i < numOfElements; i++) {
             if(this.elements[i] instanceof Marker && r.left instanceof Marker) {
@@ -136,7 +137,9 @@ startingMarker = new Marker(1, [(75 + 60), (425 - 60)], 0);
 drawing = new Drawing([startingSquare, startingMarker]);
 drawing.draw();
 
+drawing.print();
 canvas.addEventListener("click", (event) => {
     drawing.generate(rule1);
+    drawing.print();
     drawing.draw();
 });
