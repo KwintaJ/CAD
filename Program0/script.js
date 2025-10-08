@@ -44,27 +44,19 @@ class Square {
 
     // funkcja rysujaca kwadrat
     draw() {
-        // wyliczenie punktow nieobroconego kwadratu
+        // wyliczenie punktow kwadratu
         const points = [
-            [ this.p[0] - (this.a / 2) , this.p[0] - (this.a / 2)], // lewy górny
-            [ this.p[0] + (this.a / 2) , this.p[0] - (this.a / 2)], // prawy górny
-            [ this.p[0] + (this.a / 2) , this.p[0] + (this.a / 2)], // prawy dolny
-            [ this.p[0] - (this.a / 2) , this.p[0] + (this.a / 2)]  // lewy dolny
+            rotate([this.p[0] - (this.a / 2) , this.p[0] - (this.a / 2)], this.p, this.f), // lewy górny
+            rotate([this.p[0] + (this.a / 2) , this.p[0] - (this.a / 2)], this.p, this.f), // prawy górny
+            rotate([this.p[0] + (this.a / 2) , this.p[0] + (this.a / 2)], this.p, this.f), // prawy dolny
+            rotate([this.p[0] - (this.a / 2) , this.p[0] + (this.a / 2)], this.p, this.f)  // lewy dolny
         ];
 
-        // obrot kwadratu
-        const rotated = [
-            rotate(points[0], this.a, this.f),
-            rotate(points[1], this.a, this.f),
-            rotate(points[2], this.a, this.f),
-            rotate(points[3], this.a, this.f)
-        ]
-
         // rysowanie
-        ctx.moveTo(rotated[0][0], rotated[0][1]);
-        ctx.lineTo(rotated[1][0], rotated[1][1]);
-        ctx.lineTo(rotated[2][0], rotated[2][1]);
-        ctx.lineTo(rotated[3][0], rotated[3][1]);
+        ctx.moveTo(points[0][0], points[0][1]);
+        ctx.lineTo(points[1][0], points[1][1]);
+        ctx.lineTo(points[2][0], points[2][1]);
+        ctx.lineTo(points[3][0], points[3][1]);
         ctx.closePath();
 
         ctx.strokeStyle = "#1f3b73";
