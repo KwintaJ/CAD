@@ -92,10 +92,15 @@ class Drawing {
             if(this.elements[i] instanceof Marker && r.left instanceof Marker) {
                 if(this.elements[i].t == r.left?.t) {
                     for(let j = 0; j < r.right.length ; j++) {
+                        const newPoints = rotate([(this.elements[i].p[0] + r.right[j].p[0]),
+                                                  (this.elements[i].p[1] + r.right[j].p[1])],
+                                                 this.elements[i].p,
+                                                 this.elements[i].f
+                            );
+                        
                         if(r.right[j] instanceof Square) {
                             let newSquare = new Square(
-                                [(this.elements[i].p[0] + r.right[j].p[0]),
-                                 (this.elements[i].p[1] + r.right[j].p[1])],
+                                newPoints,
                                 r.right[j].a,
                                 (this.elements[i].f + r.right[j].f)
                             );
@@ -103,13 +108,13 @@ class Drawing {
                             this.elements.push(newSquare);
                         }
                         if(r.right[j] instanceof Marker) {
-                            this.elements.push(new Marker(
+                            let newMarker = new Marker(
                                 r.right[j].t,
-                                [(this.elements[i].p[0] + r.right[j].p[0]),
-                                 (this.elements[i].p[1] + r.right[j].p[1])],
+                                newPoints,
                                 (this.elements[i].f + r.right[j].f)
-                                )
                             );
+
+                            this.elements.push(newMarker);
                         }
                     }
                     this.elements.splice(i, 1);
