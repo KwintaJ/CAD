@@ -55,7 +55,7 @@ class Square {
         ctx.closePath();
 
         ctx.strokeStyle = "#1f3b73";
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 4;
         ctx.stroke();
     }
 }
