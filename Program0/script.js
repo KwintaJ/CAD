@@ -3,16 +3,11 @@ const ctx = canvas.getContext("2d");
 
 // obrot punktu p wzgleddem punktu o o kat f
 function rotate(p, o, f) {
-    const px = p[0];
-    const py = p[1];
-    const ox = o[0];
-    const oy = o[1];
-    
-    const dx = px - ox;
-    const dy = py - oy;
+    const dx = p[0] - o[0];
+    const dy = p[1] - o[1];
 
-    const xNew = dx * Math.cos(f) - dy * Math.sin(f) + ox;
-    const yNew = dx * Math.sin(f) + dy * Math.cos(f) + oy;
+    const xNew = dx * Math.cos(f) - dy * Math.sin(f) + o[0];
+    const yNew = dx * Math.sin(f) + dy * Math.cos(f) + o[1];
 
     return [xNew, yNew];
 }
@@ -130,7 +125,7 @@ class Drawing {
     }
 }
 
-/*ruleMarkerLeft = new Marker(1, [0,  0], 0);
+ruleMarkerLeft = new Marker(1, [0,  0], 0);
 ruleMarkerRight = new Marker(1, [60, -60], 0);
 ruleSquareRight = new Square([0, 0], 100, 0);
 rule1 = new ProductionRule(ruleMarkerLeft, [ruleMarkerRight, ruleSquareRight]);
@@ -145,7 +140,3 @@ canvas.addEventListener("click", (event) => {
     drawing.generate(rule1);
     drawing.draw();
 });
-*/
-
-square1 = new Square([75, 425], 100, Math.PI/8);
-square1.draw();
