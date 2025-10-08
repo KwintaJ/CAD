@@ -94,7 +94,8 @@ class Drawing {
                     for(let j = 0; j < r.right.length ; j++) {
                         if(r.right[j] instanceof Square) {
                             let newSquare = new Square(
-                                (this.elements[i].p + r.right[j].p),
+                                [(this.elements[i].p[0] + r.right[j].p[0]),
+                                 (this.elements[i].p[1] + r.right[j].p[1])],
                                 r.right[j].a,
                                 (this.elements[i].f + r.right[j].f)
                             );
@@ -104,7 +105,8 @@ class Drawing {
                         if(r.right[j] instanceof Marker) {
                             this.elements.push(new Marker(
                                 r.right[j].t,
-                                (this.elements[i].p + r.right[j].p),
+                                [(this.elements[i].p[0] + r.right[j].p[0]),
+                                 (this.elements[i].p[1] + r.right[j].p[1])],
                                 (this.elements[i].f + r.right[j].f)
                                 )
                             );
