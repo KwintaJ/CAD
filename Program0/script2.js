@@ -139,8 +139,8 @@ ruleSquareRight = new Square([0, 0], 80, 0);
 rule1 = new ProductionRule(ruleMarkerLeft, [ruleMarkerRight, ruleSquareRight]);
 
 // zdefiniowanie obrazka startowego
-startingSquare = new Square([75, 250], 80, 0);
-startingMarker = new Marker(1, [(75 + 45), (250 -45)], Math.PI/8.2);
+startingSquare = new Square([115, 170], 80, 0);
+startingMarker = new Marker(1, [(115 + 45), (170 - 45)], Math.PI/8.2);
 
 // rozpoczecie rysowania
 drawing = new Drawing([startingSquare, startingMarker]);
