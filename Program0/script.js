@@ -1,51 +1,66 @@
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 
+// obrot punktu p wzgleddem punktu o o kat f
+function rotate(p, o, f) {
+    const px = p[0];
+    const py = p[1];
+    const ox = o[0];
+    const oy = o[1];
+    
+    const dx = px - ox;
+    const dy = py - oy;
+
+    const xNew = dx * Math.cos(f) - dy * Math.sin(f) + ox;
+    const yNew = dx * Math.sin(f) + dy * Math.cos(f) + oy;
+
+    return [xNew, yNew];
+}
+
 class Marker {
-    constructor(t, x, y, f) {
+    constructor(t, p, f) {
         // typ markera (int)
-        this.t = t
+        this.t = t;
 
         // wspolrzedne
-        this.x = x
-        this.y = y
+        this.p = p;
 
         // kat obrotu w radianach
-        this.f = f
+        this.f = f;
     }
 }
 
 class Square {
-    constructor(x, y, a, f) {
+    constructor(p, a, f) {
         // wspolrzedne srodka
-        this.x = x
-        this.y = y
-
+        this.p = p;
+        
         // dlugosc boku
-        this.a = a
+        this.a = a;
 
         // kat obrotu (wokolo srodka) w radianach
-        this.f = f
+        this.f = f;
     }
 
     // funkcja rysujaca kwadrat
     draw() {
         // wyliczenie punktow nieobroconego kwadratu
         const points = [
-            [ (this.a / 2) * -1 , (this.a / 2) * -1], // lewy górny
-            [ (this.a / 2)      , (this.a / 2) * -1], // prawy górny
-            [ (this.a / 2)      , (this.a / 2)],      // prawy dolny
-            [ (this.a / 2) * -1 , (this.a / 2)]       // lewy dolny
+            [ this.p[0] - (this.a / 2) , this.p[0] - (this.a / 2)], // lewy górny
+            [ this.p[0] + (this.a / 2) , this.p[0] - (this.a / 2)], // prawy górny
+            [ this.p[0] + (this.a / 2) , this.p[0] + (this.a / 2)],      // prawy dolny
+            [ this.p[0] - (this.a / 2) , this.p[0] + (this.a / 2)]       // lewy dolny
         ];
 
-        const rotated = points.map(([px, py]) => {
-            const rx = this.x + px * Math.cos(this.f) - py * Math.sin(this.f);
-            const ry = this.y + px * Math.sin(this.f) + py * Math.cos(this.f);
-            return [rx, ry];
-        });
+        // obrot kwadratu
+        const rotatedPoints = [
+            rotate(points[0], this.a, this.f),
+            rotate(points[1], this.a, this.f),
+            rotate(points[2], this.a, this.f),
+            rotate(points[3], this.a, this.f)
+        ]
 
         // rysowanie
-        ctx.beginPath();
         ctx.moveTo(rotated[0][0], rotated[0][1]);
         ctx.lineTo(rotated[1][0], rotated[1][1]);
         ctx.lineTo(rotated[2][0], rotated[2][1]);
@@ -91,8 +106,7 @@ class Drawing {
                     for(let j = 0; j < r.right.length ; j++) {
                         if(r.right[j] instanceof Square) {
                             let newSquare = new Square(
-                                (this.elements[i].x + r.right[j].x),
-                                (this.elements[i].y + r.right[j].y),
+                                (this.elements[i].p + r.right[j].p),
                                 r.right[j].a,
                                 (this.elements[i].f + r.right[j].f)
                             );
@@ -102,8 +116,7 @@ class Drawing {
                         if(r.right[j] instanceof Marker) {
                             this.elements.push(new Marker(
                                 r.right[j].t,
-                                (this.elements[i].x + r.right[j].x),
-                                (this.elements[i].y + r.right[j].y),
+                                (this.elements[i].p + r.right[j].p),
                                 (this.elements[i].f + r.right[j].f)
                                 )
                             );
@@ -125,13 +138,13 @@ class Drawing {
     }
 }
 
-ruleMarkerLeft = new Marker(1, 0, 0, 0);
-ruleMarkerRight = new Marker(1, 60, -60, 0);
-ruleSquareRight = new Square(0, 0, 100, 0);
+ruleMarkerLeft = new Marker(1, [0,  0], 0);
+ruleMarkerRight = new Marker(1, [60, -60], 0);
+ruleSquareRight = new Square([0, 0], 100, 0);
 rule1 = new ProductionRule(ruleMarkerLeft, [ruleMarkerRight, ruleSquareRight]);
 
-startingSquare = new Square(75, 425, 100, 0);
-startingMarker = new Marker(1, (75 + 60), (425 - 60), 0);
+startingSquare = new Square([75, 425], 100, 0);
+startingMarker = new Marker(1, [(75 + 60), (425 - 60)], 0);
 
 drawing = new Drawing([startingSquare, startingMarker]);
 drawing.draw();
