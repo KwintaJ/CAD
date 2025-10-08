@@ -138,10 +138,11 @@ ruleMarkerRight = new Marker(1, [60, -60], 0);
 ruleSquareRight = new Square([0, 0], 100, 0);
 rule1 = new ProductionRule(ruleMarkerLeft, [ruleMarkerRight, ruleSquareRight]);
 
-startingSquare = new Square([75, 425], 100, 0);
-startingMarker = new Marker(1, [(75 + 60), (425 - 60)], 0);
+startingSquare = new Square([250, 250], 100, 0);
+startingMarker1 = new Marker(1, [(250 + 60), (250 - 60)], 0);
+startingMarker2 = new Marker(1, [(250 - 60), (250 + 60)], Math.PI);
 
-drawing = new Drawing([startingSquare, startingMarker]);
+drawing = new Drawing([startingSquare, startingMarker1, startingMarker2]);
 drawing.draw();
 
 drawing.print();
