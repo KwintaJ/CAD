@@ -48,8 +48,8 @@ class Square {
         const points = [
             [ this.p[0] - (this.a / 2) , this.p[0] - (this.a / 2)], // lewy górny
             [ this.p[0] + (this.a / 2) , this.p[0] - (this.a / 2)], // prawy górny
-            [ this.p[0] + (this.a / 2) , this.p[0] + (this.a / 2)],      // prawy dolny
-            [ this.p[0] - (this.a / 2) , this.p[0] + (this.a / 2)]       // lewy dolny
+            [ this.p[0] + (this.a / 2) , this.p[0] + (this.a / 2)], // prawy dolny
+            [ this.p[0] - (this.a / 2) , this.p[0] + (this.a / 2)]  // lewy dolny
         ];
 
         // obrot kwadratu
@@ -138,7 +138,7 @@ class Drawing {
     }
 }
 
-ruleMarkerLeft = new Marker(1, [0,  0], 0);
+/*ruleMarkerLeft = new Marker(1, [0,  0], 0);
 ruleMarkerRight = new Marker(1, [60, -60], 0);
 ruleSquareRight = new Square([0, 0], 100, 0);
 rule1 = new ProductionRule(ruleMarkerLeft, [ruleMarkerRight, ruleSquareRight]);
@@ -153,4 +153,8 @@ canvas.addEventListener("click", (event) => {
     drawing.generate(rule1);
     drawing.draw();
 });
+*/
+
+startingSquare = new Square([75, 425], 100, Math.PI/8);
+startingSquare.ddraw();
 
