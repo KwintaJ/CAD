@@ -1,5 +1,8 @@
-const canvas = document.getElementById("canvas1");
-const ctx = canvas.getContext("2d");
+const canvas1 = document.getElementById("canvas1");
+const ctx1 = canvas1.getContext("2d");
+
+const canvas2 = document.getElementById("canvas2");
+const ctxR = canvas2.getContext("2d");
 
 // obrot punktu p wzgleddem punktu o o kat f
 function rotate(p, o, f) {
@@ -23,6 +26,23 @@ class Marker {
         // kat obrotu w radianach
         this.f = f;
     }
+
+    draw(ctx) {
+        const points = [
+            this.p,
+            rotate([this.p[0] , this.p[1] - 10], this.p, this.f),
+            rotate([this.p[0] + 5 , this.p[1] - 6], this.p, this.f),
+        ];
+
+        ctx.beginPath();
+        ctx.moveTo(points[0][0], points[0][1]);
+        ctx.lineTo(points[1][0], points[1][1]);
+        ctx.lineTo(points[2][0], points[2][1]);
+
+        ctx.strokeStyle = "#ffa45c";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
 }
 
 class Square {
@@ -38,7 +58,7 @@ class Square {
     }
 
     // funkcja rysujaca kwadrat
-    draw() {
+    draw(ctx) {
         // wyliczenie punktow kwadratu
         const points = [
             rotate([this.p[0] - (this.a / 2) , this.p[1] - (this.a / 2)], this.p, this.f), // lewy górny
@@ -48,14 +68,18 @@ class Square {
         ];
 
         // rysowanie
+        ctx.beginPath();
         ctx.moveTo(points[0][0], points[0][1]);
         ctx.lineTo(points[1][0], points[1][1]);
         ctx.lineTo(points[2][0], points[2][1]);
         ctx.lineTo(points[3][0], points[3][1]);
         ctx.closePath();
 
-        ctx.strokeStyle = "#1f3b73";
-        ctx.lineWidth = 4;
+        ctx.fillStyle = "rgba(126, 182, 255, 0.25)";
+        ctx.fill();
+
+        ctx.strokeStyle = "#2c5aa0";
+        ctx.lineWidth = 1;
         ctx.stroke();
     }
 }
@@ -67,6 +91,58 @@ class ProductionRule {
         this.right = R; // lista kwadratow i markerow po prawej stronie reguly produkcji 
                         // przesuniecie i obrot oznaczony jest na elementach z prawej strony
     }
+
+    draw() {
+        ctxR.clearRect(0, 0, ctxR.canvas.width, ctxR.canvas.height);
+
+        const w = ctxR.canvas.width;
+        const h = ctxR.canvas.height;
+        const centerY = h / 2;
+
+        // punkt odniesienia dla lewej i prawej strony
+        const leftOrigin = [w * 0.25, centerY];
+        const rightOrigin = [w * 0.65, centerY];
+
+        // rysowanie lewej strony (tylko marker)
+        ctxR.save();
+        const leftMarker = new Marker(
+            this.left.t,
+            leftOrigin,
+            this.left.f
+        );
+        leftMarker.draw(ctxR);
+        ctxR.restore();
+
+        // strzałka 
+        ctxR.beginPath();
+        ctxR.strokeStyle = "#222";
+        ctxR.lineWidth = 1.5;
+        ctxR.moveTo(leftOrigin[0] + 50, centerY);
+        ctxR.lineTo(rightOrigin[0] - 50, centerY);
+        ctxR.stroke();
+
+        ctxR.beginPath();
+        ctxR.moveTo(rightOrigin[0] - 50, centerY);
+        ctxR.lineTo(rightOrigin[0] - 58, centerY - 5);
+        ctxR.lineTo(rightOrigin[0] - 58, centerY + 5);
+        ctxR.closePath();
+        ctxR.fillStyle = "#222";
+        ctxR.fill();
+
+        // rysowanie prawej strony reguły (markery i kwadraty)
+        ctxR.save();
+        ctxR.translate(rightOrigin[0], rightOrigin[1]);
+
+        for (let i = 0; i < this.right.length; i++) {
+            if (this.right[i] instanceof Square) {
+                const s = new Square([this.right[i].p[0] + 20, this.right[i].p[1]], this.right[i].a, this.right[i].f);
+                s.draw(ctxR);
+            } else if (this.right[i] instanceof Marker) {
+                const m = new Marker(this.right[i].t, [this.right[i].p[0] + 20, this.right[i].p[1]], this.right[i].f);
+                m.draw(ctxR);
+            }
+        }
+    }
 }
 
 class Drawing {
@@ -76,11 +152,9 @@ class Drawing {
 
     // przedstawianie rysunka na kanwie
     draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
         for(let i = 0; i < this.elements.length; i++) {
-            if(this.elements[i] instanceof Square) {
-                this.elements[i].draw();
-            }
+            this.elements[i].draw(ctx1);
         }
     }
 
@@ -137,6 +211,7 @@ ruleMarkerLeft = new Marker(1, [0,  0], 0);
 ruleMarkerRight = new Marker(1, [60, -60], 0);
 ruleSquareRight = new Square([0, 0], 100, 0);
 rule1 = new ProductionRule(ruleMarkerLeft, [ruleMarkerRight, ruleSquareRight]);
+rule1.draw()
 
 // zdefiniowanie obrazka startowego
 startingSquare = new Square([250, 250], 100, 0);
@@ -149,7 +224,7 @@ drawing.draw();
 
 // za kazdym kliknieciem myszka stosujemy regule produkcji w kazdym
 // miejscu gdzie znajdziemy dopasowanie i rysujemy nowy rysunek
-canvas.addEventListener("click", (event) => {
+canvas1.addEventListener("click", (event) => {
     drawing.generate(rule1);
     drawing.draw();
 });
