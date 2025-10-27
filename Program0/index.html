@@ -1,27 +1,105 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prosta gramatyka kształtu</title>
-  <style>
-    body {
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f0f0f0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kwadraty</title>
+    <style>
+        :root {
+            --bg-color: #f7f4ef;          /* beżowe tło */
+            --text-color: #222;           /* ciemny tekst */
+            --accent-blue: #7eb6ff;       /* błękitny akcent */
+            --accent-orange: #ffa45c;     /* pomarańczowy akcent */
+        }
 
-    canvas {
-      border: 1px solid #333;
-      background-color: white;
-    }
-  </style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-color);
+            animation: fadeIn 1s ease;
+        }
+
+        main {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+            animation: fadeIn 1.2s ease;
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        canvas {
+            border: 2px solid var(--accent-blue);
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        canvas:hover {
+            border-color: var(--accent-orange);
+        }
+
+        .nav {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav a {
+            text-decoration: none;
+            padding: 0.6rem 1.3rem;
+            border-radius: 8px;
+            background: var(--accent-blue);
+            color: white;
+            font-weight: 600;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .nav a:hover {
+            background: var(--accent-orange);
+            transform: translateY(-2px);
+        }
+
+        footer {
+            align-items: center;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
-  <canvas id="canvas1" width="500" height="500"></canvas>
-  <script src="script1.js"></script>
+    <canvas id="canvas1" width="500" height="500"></canvas>
+
+    <div class="nav">
+        <a href="https://kwintaj.github.io/CAD/">Powrót</a>
+    </div>
+
+    <footer>
+        © 2025 Jan Kwinta — CAD: Shape Grammar Engine
+    </footer>
+
+    <script src="script1.js"></script>
 </body>
 </html>
