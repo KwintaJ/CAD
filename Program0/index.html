@@ -113,7 +113,7 @@ const ctx1 = canvas1.getContext("2d");
 const canvas2 = document.getElementById("canvas2");
 const ctxR = canvas2.getContext("2d");
 
-// obrot punktu p wzgleddem punktu o o kat f
+// obrot punktu p wzgledem punktu o o kat f
 function rotate(p, o, f) {
     const dx = p[0] - o[0];
     const dy = p[1] - o[1];
@@ -151,6 +151,36 @@ class Marker {
         ctx.strokeStyle = "#ffa45c";
         ctx.lineWidth = 2;
         ctx.stroke();
+    }
+}
+
+class Line {
+    constructor(a, b) {
+        // wspolrzedne koncow odcinka
+        this.a = a;
+        this.b = b;
+    }
+    
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.moveTo(a[0], a[1]);
+        ctx.lineTo(b[0], b[1]);
+
+        ctx.strokeStyle = "#2c5aa0";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    }
+}
+
+class Shape {
+    constructor(e) {
+        this.elements = e;
+    }
+    
+    draw(ctx) {
+        for (let i = 0; i < this.elements.length; i++) {
+            this.elements.draw(ctx)
+        }
     }
 }
 
