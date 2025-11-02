@@ -104,8 +104,65 @@
         © 2025 Jan Kwinta — CAD: Shape Grammar Engine
     </footer>
 
-    <script>
+<script type="module">
+//=========================================================
+// canvas glowne
+const canvas1 = document.getElementById("canvas1");
+const ctx1 = canvas1.getContext("2d");
+// canvas do wyswietlenia regul produkcji
+const canvas2 = document.getElementById("canvas2");
+const ctx2 = canvas2.getContext("2d");
+
+//=========================================================
+// importowanie klas silnika
+import {Point, Marker, Line, Shape} from '../Engine/geometry.js';
+import {ProductionRule, Drawing} from '../Engine/engine.js';
+
+//=========================================================
+// PRYMITYWY
+const pointA = new Point(0, 0);
+const pointB = new Point(0, 50);
+const pointC = new Point(50, 0);
+
+const P_TRIANGLE = new Shape([
+                   new Line(pointA, pointB),
+                   new Line(pointB, pointC),
+                   new Line(pointC, pointA)]);
+
+//=========================================================
+// DEFINICJE
+
+// zdefiniowanie regul produkcji
+let rule1Left = [P_TRIANGLE];
+let rule1Right = [P_TRIANGLE.rotateAround(pointA, -Math.PI/2), P_TRIANGLE];
+let rule1 = new ProductionRule(rule1Left, rule1Right, ctx2);
+// rule1.draw()
+
+let rule2Left = [P_TRIANGLE];
+let rule2Right = [P_TRIANGLE.rotateAround(pointA, Math.PI).translate(50*Math.sqrt(2), 50*Math.sqrt(2)), P_TRIANGLE];
+let rule2 = new ProductionRule(rule2Left, rule2Right, ctx2);
+
+// zdefiniowanie elementow obrazka startowego
+let startingTriangle = P_TRIANGLE.translate(250, 255); 
+
+// zdefiniowanie obrazka
+let drawing = new Drawing([startingTriangle], ctx1);
+
+//=========================================================
+// rozpoczecie rysowania
+drawing.draw();
+
+canvas1.addEventListener("click", (event) => {
+    drawing.generate(rule1);
+    drawing.draw();
+});
+
+canvas2.addEventListener("click", (event) => {
+    drawing.generate(rule2);
+    drawing.draw();
+});
         
-    </script>
+</script>
+
 </body>
 </html>

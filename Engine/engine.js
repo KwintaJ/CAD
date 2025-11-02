@@ -63,7 +63,7 @@ function checkSimilarity(shA, shB) {
 
     // TODO skalowanie
 
-    if(shA.rotate(f).translate(dx, dy).equals(shB)) {
+    if(shA.translate(dx, dy).equals(shB)) {
         return [f, dx, dy, 1];
     }
     return [-1, -1, -1, -1];
@@ -124,8 +124,17 @@ export class Drawing {
         this.subset = [];
     }
 
+    // "odchudzanie" i mieszanie zbioru elementow - usuwamy duplikaty i losowo mieszamy
+    thinAndShuffle() {
+        this.elements = this.elements.filter((p, i, arr) => arr.findIndex(q => q.equals(p)) === i);
+        this.elements.sort(() => Math.random() - 0.5);
+        console.log(this.elements.length);
+    }
+
     // przedstawianie rysunka na kanwie
     draw() {
+        this.thinAndShuffle();
+
         this.context.clearRect(0, 0, canvas1.width, canvas1.height);
         for(let i = 0; i < this.elements.length; i++) {
             this.elements[i].draw(this.context);
@@ -187,8 +196,6 @@ export class Drawing {
                 // jesli znalezlismy dopasowanie:
                 // trzeba usunac dopasowane elementy i zastapic je wszystkim
                 // z prawej strony reguly po przeksztalceniu
-                console.log("Dopasowanie");
-                console.log(transformation);
 
                 for(let l = N - 1; l >= 0; l--) {
                     let idx = this.subset[l];
