@@ -106,188 +106,54 @@
         © 2025 Jan Kwinta — CAD: Shape Grammar Engine
     </footer>
 
-    <script>
+<script type="module">
+//=========================================================
+// canvas glowne
 const canvas1 = document.getElementById("canvas1");
 const ctx1 = canvas1.getContext("2d");
-
+// canvas do wyswietlenia regul produkcji
 const canvas2 = document.getElementById("canvas2");
-const ctxR = canvas2.getContext("2d");
+const ctx2 = canvas2.getContext("2d");
 
 //=========================================================
-// FUNKCJE GEOMETRYCZNE
-
-
-// przesuniecie punktu, markera, odcinka i ksztaltu o wektor x, y
-function translate(p, x, y) {
-    return [p[0] + x, p[1] + y];
-}
-
-function translateMarker(m, x, y) {
-    return new Marker(translate(m.p, x, y), m.f, m.t);
-}
-
-function translateLine(l, x, y) {
-    return new Line(translate(l.a, x, y), translate(l.b, x, y))
-}
-
-function translateShape(s, x, y) {
-    newLines = [];
-    for (let i = 0; i < s.lines.length; i++) {
-        newLines.push(translateLine(s.lines[i], x, y));
-    }
-    return new Shape(newLines);
-}
-
-
-// obrot punktu, markera, odcinka i kształtu p wzgledem punktu o o kat f
-function rotate(p, o, f) {
-    const dx = p[0] - o[0];
-    const dy = p[1] - o[1];
-
-    const xNew = dx * Math.cos(f) - dy * Math.sin(f) + o[0];
-    const yNew = dx * Math.sin(f) + dy * Math.cos(f) + o[1];
-
-    return [xNew, yNew];
-}
-
-function rotateMarker(m, o, f) {
-    return new Marker(rotate(m.p, o, f), m.f + f, m.t);
-}
-
-function rotateLine(o, f) {
-    return new Line(rotate(l.a, o, f), rotate(l.b, o, f));
-}
-
-function rotateShape(s, o, f) {
-    newLines = [];
-    for (let i = 0; i < s.lines.length; i++) {
-        newLines.push(rotateLine(s.lines[i], o, f));
-    }
-    return new Shape(newLines);
-}
-
-
-class Marker {
-    constructor(p, f, t) {
-        // wspolrzedne
-        this.p = p;
-
-        // kat obrotu w radianach
-        this.f = f;
-        
-        // typ markera (int)
-        this.t = t;
-
-    }
-
-    draw(ctx) {
-        const points = [
-            this.p,
-            rotate([this.p[0] , this.p[1] - 10], this.p, this.f),
-            rotate([this.p[0] + 5 , this.p[1] - 6], this.p, this.f),
-        ];
-
-        ctx.beginPath();
-        ctx.moveTo(points[0][0], points[0][1]);
-        ctx.lineTo(points[1][0], points[1][1]);
-        ctx.lineTo(points[2][0], points[2][1]);
-
-        ctx.strokeStyle = "#ffa45c";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-    }
-}
-
-class Line {
-    constructor(a, b) {
-        // wspolrzedne koncow odcinka
-        this.a = a;
-        this.b = b;
-    }
-    
-    draw(ctx) {
-        ctx.beginPath();
-        ctx.moveTo(this.a[0], this.a[1]);
-        ctx.lineTo(this.b[0], this.b[1]);
-
-        ctx.strokeStyle = "#2c5aa0";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-    }
-}
-
-class Shape {
-    constructor(e) {
-        this.lines = e;
-    }
-    
-    draw(ctx) {
-        for (let i = 0; i < this.lines.length; i++) {
-            this.lines[i].draw(ctx)
-        }
-    }
-}
-
-class ProductionRule {
-    constructor(L, R) {
-        this.left = L; // lista ksztaltow i markerow po lewej stronie reguly produkcji 
-        this.right = R; // lista ksztaltow i markerow po prawej stronie reguly produkcji 
-                        // przesuniecie, obrot i skala oznaczony jest na elementach z prawej strony
-                        // strony reguly produkcji sa rownane do lewego gornego rogu
-    }
-}
-
-class Drawing {
-    constructor(e) {
-        this.elements = e; // lista kwadratow i markerow
-    }
-
-    // przedstawianie rysunka na kanwie
-    draw() {
-        ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
-        for(let i = 0; i < this.elements.length; i++) {
-            this.elements[i].draw(ctx1);
-        }
-    }
-
-    // generowanie kolejnego rysunka stosujac regule produkcji r
-    generate(r) {
-        
-    }
-
-    // debug
-    print() {
-        for(let i = 0; i < this.elements.length; i++) {
-            console.log(this.elements[i]);
-        }
-    }
-}
+// importowanie klas silnika
+import {Point, Marker, Line, Shape} from '../Engine/geometry.js';
+import {ProductionRule, Drawing} from '../Engine/engine.js';
 
 //=========================================================
 // PRYMITYWY
-const P_SQUARE = new Shape([new Line([0, 0], [100, 0]),
-                 new Line([100, 0], [100, 100]),
-                 new Line([100, 100], [0, 100]),
-                 new Line([0, 100], [0, 0])]);
+const pointA = new Point(0, 0);
+const pointB = new Point(0, 100);
+const pointC = new Point(100, 100);
+const pointD = new Point(100, 0);
 
-const P_MARKER = new Marker([0, 0], 0, 1);
+const P_SQUARE = new Shape([
+                 new Line(pointA, pointB),
+                 new Line(pointB, pointC),
+                 new Line(pointC, pointD),
+                 new Line(pointD, pointA)]);
+
+const P_MARKER = new Marker(pointA, 0, 1);
 
 //=========================================================
-// MAIN
+// DEFINICJE
 
 // zdefiniowanie reguly produkcji
-ruleLeft = [translateMarker(P_MARKER, 60, 50)];
-ruleRight = [translateMarker(P_MARKER, 120, 0), translateShape(P_SQUARE, )]
-rule1 = new ProductionRule(ruleLeft, ruleRight);
+let ruleLeft = [P_MARKER.translate(60, 50)];
+let ruleRight = [P_MARKER.translate(120, 0), P_SQUARE.translate(10, 10)]
+let rule1 = new ProductionRule(ruleLeft, ruleRight, ctx2);
 // rule1.draw()
 
-// zdefiniowanie obrazka startowego
-startingSquare1 = translateShape(P_SQUARE, 200, 200); 
-startingMarker1 = translateMarker(P_MARKER, 310, 190);
-startingMarker2 = translateMarker(rotateMarker(P_MARKER, [0, 0], Math.PI), 190, 310);
+// zdefiniowanie elementow obrazka startowego
+let startingSquare1 = P_SQUARE.translate(200, 200); 
+let startingMarker1 = P_MARKER.translate(310, 190);
+let startingMarker2 = P_MARKER.rotate(Math.PI).translate(190, 310);
 
+// zdefiniowanie obrazka
+let drawing = new Drawing([startingSquare1, startingMarker1, startingMarker2], ctx1);
+
+//=========================================================
 // rozpoczecie rysowania
-drawing = new Drawing([startingSquare1, startingMarker1, startingMarker2]);
 drawing.draw();
 
 // za kazdym kliknieciem myszka stosujemy regule produkcji w kazdym
@@ -295,6 +161,7 @@ drawing.draw();
 canvas1.addEventListener("click", (event) => {
     drawing.draw();
 });
-    </script>
+</script>
+
 </body>
 </html>
