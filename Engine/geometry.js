@@ -54,6 +54,10 @@ export class Marker {
     rotate(f) {
         return new Marker(this.p.rotate(this.p, f), this.f + f, this.t);
     }
+
+    rotateAround(g, f) {
+        return new Marker(this.p.rotate(g, f), this.f + f, this.t);
+    }
 }
 
 export class Line {
@@ -112,6 +116,34 @@ export class Shape {
         return new Point(sumX / uniquePoints.length, sumY / uniquePoints.length);
     }
 
+    // metoda zwraca kat miedzy osia X a odcinkiem 
+    // laczacym srodek masy z pierwszym punktem ksztaltu
+    getNormalAngle() {
+        // wektor od srodka masy do pierwszego punktu
+        let dx = this.lines[0].a.x - this.centerOfMass.x;
+        let dy = this.lines[0].a.y - this.centerOfMass.y;
+
+        // zwraca kat w radianach
+        return Math.atan2(dy, dx);
+    }
+
+    equals(other) {
+        if (!(other instanceof Shape)) return false;
+        if (this.lines.length !== other.lines.length) return false;
+
+        for (let i = 0; i < this.lines.length; i++) {
+            const a1 = this.lines[i].a;
+            const b1 = this.lines[i].b;
+            const a2 = other.lines[i].a;
+            const b2 = other.lines[i].b;
+
+            if (Math.abs(a1.x - a2.x) > 0.001 || Math.abs(a1.y - a2.y) > 0.001) return false;
+            if (Math.abs(b1.x - b2.x) > 0.001 || Math.abs(b1.y - b2.y) > 0.001) return false;
+        }
+
+        return true;
+    }
+
     draw(ctx) {
         for (let i = 0; i < this.lines.length; i++) {
             this.lines[i].draw(ctx)
@@ -130,6 +162,14 @@ export class Shape {
         let newLines = [];
         for (let i = 0; i < this.lines.length; i++) {
             newLines.push(this.lines[i].rotate(this.centerOfMass, f));
+        }
+        return new Shape(newLines);
+    }
+
+    rotateAround(g, f) {
+        let newLines = [];
+        for (let i = 0; i < this.lines.length; i++) {
+            newLines.push(this.lines[i].rotate(g, f));
         }
         return new Shape(newLines);
     }

@@ -139,8 +139,8 @@ const P_MARKER = new Marker(pointA, 0, 1);
 // DEFINICJE
 
 // zdefiniowanie reguly produkcji
-let ruleLeft = [P_MARKER.translate(60, 50), P_MARKER.translate(60, 60)];
-let ruleRight = [P_MARKER.translate(120, 0), P_SQUARE.translate(10, 10)]
+let ruleLeft = [P_MARKER];
+let ruleRight = [P_MARKER.translate(60, -60), P_SQUARE.translate(-50, -50)]
 let rule1 = new ProductionRule(ruleLeft, ruleRight, ctx2);
 // rule1.draw()
 
