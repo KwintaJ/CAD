@@ -7,7 +7,7 @@ export class Point {
         this.y = y;
     }
 
-    // przesuniecie punktu o wektor x, y; zwraca new Point()
+    // przesuniecie punktu o wektor [x, y]; zwraca new Point()
     translate(x, y) {
         return new Point(this.x + x, this.y + y);
     }
@@ -65,7 +65,6 @@ export class Line {
     
     draw(ctx) {
         ctx.beginPath();
-        console.log("Draw from " + this.a.x + ", " + this.a.y + " to " + this.b.x + ", " + this.b.y);
         ctx.moveTo(this.a.x, this.a.y);
         ctx.lineTo(this.b.x, this.b.y);
 
