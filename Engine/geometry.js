@@ -30,7 +30,14 @@ export class Marker {
         
         // typ markera (int)
         this.t = t;
+    }
 
+    equals(other) {
+        if (!(other instanceof Marker)) return false;
+        if (this.t != other.t) return false
+        if (Math.abs(this.p.x - other.p.x) > 0.001 || Math.abs(this.p.y - other.p.y) > 0.001) return false;
+        
+        return true;
     }
 
     draw(ctx) {
