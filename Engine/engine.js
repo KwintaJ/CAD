@@ -203,6 +203,9 @@ export class Drawing {
                 }
 
                 for(let l = 0; l < rule.right.length; l++) {
+                    // TO DO
+                    // dopisac, jezeli rysunek sie nie zmienia
+                    // generacja w innym miejscu
                     this.elements.push(rule.right[l].rotateAround(new Point(0, 0), transformation[0]).translate(transformation[1], transformation[2]))
                 }
 
