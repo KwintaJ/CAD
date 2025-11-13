@@ -61,18 +61,18 @@ function checkMarkers(mkA, mkB) {
     if(mkA.t != mkB.t) return [-1, -1, -1, -1];
 
     // wyliczenie kata obrotu
-    let f = (Math.round(mkB.f - mkA.f)) % (2 * Math.PI);
+    let f = ((mkB.f - mkA.f)) % (2 * Math.PI);
 
     mkA = mkA.rotateAround(new Point(0, 0), f);
 
     // wyliczenie skali
-    let s = Math.round(mkB.s / mkA.s);
+    let s = (mkB.s / mkA.s);
 
     mkA = mkA.scaleAround(new Point(0, 0), s);
 
     // wyliczenie wektora przesuniecia
-    let dx = Math.round(mkB.p.x - mkA.p.x);
-    let dy = Math.round(mkB.p.y - mkA.p.y);
+    let dx = (mkB.p.x - mkA.p.x);
+    let dy = (mkB.p.y - mkA.p.y);
 
     return [f, dx, dy, s];
 }
