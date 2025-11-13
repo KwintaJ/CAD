@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prostokąty</title>
+    <style>
+        :root {
+            --bg-color: #f7f4ef;          /* beżowe tło */
+            --text-color: #222;           /* ciemny tekst */
+            --accent-blue: #7eb6ff;       /* błękitny akcent */
+            --accent-orange: #ffa45c;     /* pomarańczowy akcent */
+        }
+
+        body {
+            margin: 10;
+            height: 120vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-color);
+            animation: fadeIn 1s ease;
+        }
+
+        main {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+            animation: fadeIn 1.2s ease;
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            letter-spacing: 0.5px;
+        }
+
+        canvas {
+            border: 2px solid var(--accent-blue);
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        .rule:hover {
+            border-color: var(--accent-orange);
+        }
+
+        .nav {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav a {
+            text-decoration: none;
+            padding: 0.6rem 1.3rem;
+            border-radius: 8px;
+            background: var(--accent-blue);
+            color: white;
+            font-weight: 600;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .nav a:hover {
+            background: var(--accent-orange);
+            transform: translateY(-2px);
+        }
+
+        footer {
+            align-items: center;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Reguły produkcji</h1>
+    <canvas class="rule" id="canvas2" width="500" height="180"></canvas>
+    <br>
+    <canvas class="rule" id="canvas3" width="500" height="180"></canvas>    
+    <br>
+
+
+    <h1>Rysunek</h1>
+    <canvas id="canvas1" width="500" height="500"></canvas>
+    <br>
+
+    Kliknij na regułę produkcji aby generować.
+
+    <div class="nav">
+        <a href="https://kwintaj.github.io/CAD/">Powrót</a>
+        <a id="resetButton">Reset</a>
+    </div>
+
+    <footer>
+        © 2025 Jan Kwinta — CAD: Shape Grammar Engine
+    </footer>
+
+<script type="module">
+//=========================================================
+// canvas glowne
+const canvas1 = document.getElementById("canvas1");
+const ctx1 = canvas1.getContext("2d");
+// canvas do wyswietlenia regul produkcji
+const canvas2 = document.getElementById("canvas2");
+const ctx2 = canvas2.getContext("2d");
+const canvas3 = document.getElementById("canvas3");
+const ctx3 = canvas3.getContext("2d");
+
+//=========================================================
+// importowanie klas silnika
+import {Point, Marker, Line, Shape} from '../Engine/geometry.js';
+import {ProductionRule, Drawing} from '../Engine/engine.js';
+
+//=========================================================
+// PRYMITYWY
+const pointA = new Point(0, 0);
+const pointB = new Point(80, 0);
+const pointC = new Point(80, 40);
+const pointD = new Point(0, 40);
+
+const P_RECTANGLE = new Shape([
+                    new Line(pointA, pointB),
+                    new Line(pointB, pointC),
+                    new Line(pointC, pointD),
+                    new Line(pointD, pointA)]);
+
+//=========================================================
+// DEFINICJE
+
+// zdefiniowanie regul produkcji
+let rule1Left = [P_RECTANGLE.translate(0, -40), 
+                 P_RECTANGLE.rotateAround(new Point(0, 0), Math.PI / 2).translate(0, -40)];
+let rule1Right = [P_RECTANGLE.translate(0, -40), 
+                  P_RECTANGLE.rotateAround(new Point(0, 0), Math.PI / 2).translate(0, -40),
+                  P_RECTANGLE.rotateAround(new Point(0, 0), Math.PI / 2).translate(40, 0)];
+let rule1 = new ProductionRule(rule1Left, rule1Right, ctx2, [canvas2.width, canvas2.height]);
+rule1.draw()
+
+let rule2Left = [P_RECTANGLE.translate(-20, -40), 
+                 P_RECTANGLE.rotateAround(new Point(0, 0), Math.PI / 2).translate(20, 0)];
+let rule2Right = [P_RECTANGLE.translate(-20, -40), 
+                  P_RECTANGLE.translate(20, 0),
+                  P_RECTANGLE.rotateAround(new Point(0, 0), Math.PI / 2).translate(20, 0)];
+let rule2 = new ProductionRule(rule2Left, rule2Right, ctx3, [canvas3.width, canvas3.height]);
+rule2.draw();
+
+// zdefiniowanie elementow obrazka startowego
+let startingRectangle1 = P_RECTANGLE.translate(50, 20);
+let startingRectangle2 = P_RECTANGLE.rotateAround(new Point(0, 0), Math.PI / 2).translate(50, 20);
+
+// zdefiniowanie obrazka
+let drawing = new Drawing([startingRectangle1, startingRectangle2], ctx1, [canvas1.width, canvas1.height]);
+
+//=========================================================
+// rozpoczecie rysowania
+drawing.draw();
+
+canvas2.addEventListener("click", (event) => {
+    drawing.generate(rule1, 100);
+    drawing.draw();
+});
+
+canvas3.addEventListener("click", (event) => {
+    drawing.generate(rule2, 100);
+    drawing.draw();
+});
+
+const resetButton = document.getElementById("resetButton");
+resetButton.addEventListener("click", (event) => {
+    drawing = new Drawing([startingRectangle1, startingRectangle2], ctx1, [canvas1.width, canvas1.height]);
+    drawing.draw();
+});
+        
+</script>
+
+</body>
+</html>

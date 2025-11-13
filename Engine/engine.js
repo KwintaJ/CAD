@@ -61,18 +61,18 @@ function checkMarkers(mkA, mkB) {
     if(mkA.t != mkB.t) return [-1, -1, -1, -1];
 
     // wyliczenie kata obrotu
-    let f = mkB.f - mkA.f;
+    let f = (Math.round(mkB.f - mkA.f)) % (2 * Math.PI);
 
     mkA = mkA.rotateAround(new Point(0, 0), f);
 
     // wyliczenie skali
-    let s = mkB.s / mkA.s;
+    let s = Math.round(mkB.s / mkA.s);
 
     mkA = mkA.scaleAround(new Point(0, 0), s);
 
     // wyliczenie wektora przesuniecia
-    let dx = mkB.p.x - mkA.p.x;
-    let dy = mkB.p.y - mkA.p.y;;
+    let dx = Math.round(mkB.p.x - mkA.p.x);
+    let dy = Math.round(mkB.p.y - mkA.p.y);
 
     return [f, dx, dy, s];
 }
@@ -81,9 +81,13 @@ function checkMarkers(mkA, mkB) {
 // zwraca odwzorowanie lub [-1, ...] jesli nie sa podobne
 function checkSimilarity(shA, shB) {
     if (shA.lines.length !== shB.lines.length) return [-1, -1, -1, -1];
-    
+
+    console.log(".");
+    console.log(shA);
+    console.log(shB);
+
     // wyliczenie kata obrotu
-    let f = shB.getNormalAngle() - shA.getNormalAngle();
+    let f = (shB.getNormalAngle() - shA.getNormalAngle()) % (2 * Math.PI);
 
     shA = shA.rotateAround(new Point(0, 0), f);
 
@@ -96,7 +100,10 @@ function checkSimilarity(shA, shB) {
     let dx = shB.centerOfMass.x - shA.centerOfMass.x;
     let dy = shB.centerOfMass.y - shA.centerOfMass.y;
 
-    if(shA.translate(dx, dy).equals(shB)) {
+    shA = shA.translate(dx, dy);
+
+    if(shA.equals(shB)) {
+        console.log([f, dx, dy, s])
         return [f, dx, dy, s];
     }
 
@@ -130,20 +137,33 @@ function compareFitting(one, two, N, C) {
 
     for(const p_oneMarkers of permute(oneMarkers)) {
         outer: for(const p_oneShapes of permute(oneShapes)) {
-            let transformation = []
+            let transformations = [];
             for(let m = 0; m < p_oneMarkers.length; m++) {
                 let trn = checkMarkers(p_oneMarkers[m], twoMarkers[m]);
-                if(trn[0] == -1) continue outer;
-                transformation.push(trn);
+                if(trn[0] == -1) {
+                    transformations = [];
+                    continue outer;
+                }
+                transformations.push(trn);
             }
             for(let m = 0; m < p_oneShapes.length; m++) {
                 let trn = checkSimilarity(p_oneShapes[m], twoShapes[m]);
-                if(trn[0] == -1) continue outer;
-                transformation.push(trn);
+                if(trn[0] == -1) {
+                    transformations = [];
+                    continue outer;
+                }
+                transformations.push(trn);
             }
-            let areAllEqual = transformation.every(v => JSON.stringify(v) === JSON.stringify(transformation[0]));
+            let areAllEqual = true;
+            for(let m = 1; m < transformations.length; m++) {
+                if(Math.abs(transformations[0][0] - transformations[m][0]) > 0.1) areAllEqual = false;
+                if(Math.abs(transformations[0][1] - transformations[m][1]) > 0.1) areAllEqual = false;
+                if(Math.abs(transformations[0][2] - transformations[m][2]) > 0.1) areAllEqual = false;
+                if(Math.abs(transformations[0][3] - transformations[m][3]) > 0.1) areAllEqual = false;
+            }
+
             if(areAllEqual){
-                return transformation[0];
+                return transformations[0];
             }
         }
     }
@@ -247,6 +267,8 @@ export class Drawing {
                 // jesli znalezlismy dopasowanie:
                 // trzeba usunac dopasowane elementy i zastapic je wszystkim
                 // z prawej strony reguly po przeksztalceniu
+
+                console.log(transformation);
 
                 for(let l = N - 1; l >= 0; l--) {
                     let idx = this.subset[l];

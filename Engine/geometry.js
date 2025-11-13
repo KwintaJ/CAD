@@ -153,7 +153,7 @@ export class Shape {
             sumY += p.y;
         }
 
-        return new Point(sumX / uniquePoints.length, sumY / uniquePoints.length);
+        return new Point(Math.round(sumX / uniquePoints.length), Math.round(sumY / uniquePoints.length));
     }
 
     calculateCircumference() {
@@ -161,7 +161,7 @@ export class Shape {
         for (let i = 0; i < this.lines.length; i++) {
             sum += this.lines[i].length();
         }
-        return sum;
+        return Math.round(sum);
     }
 
     // metoda zwraca kat miedzy osia X a odcinkiem 
@@ -185,8 +185,8 @@ export class Shape {
             const a2 = other.lines[i].a;
             const b2 = other.lines[i].b;
 
-            if (Math.abs(a1.x - a2.x) > 0.001 || Math.abs(a1.y - a2.y) > 0.001) return false;
-            if (Math.abs(b1.x - b2.x) > 0.001 || Math.abs(b1.y - b2.y) > 0.001) return false;
+            if (Math.abs(a1.x - a2.x) > 0.1 || Math.abs(a1.y - a2.y) > 0.1) return false;
+            if (Math.abs(b1.x - b2.x) > 0.1 || Math.abs(b1.y - b2.y) > 0.1) return false;
         }
 
         return true;
@@ -196,6 +196,10 @@ export class Shape {
         for (let i = 0; i < this.lines.length; i++) {
             this.lines[i].draw(ctx)
         }
+
+        // debug
+        // let normalLine = new Line(this.lines[0].a, this.centerOfMass);
+        // normalLine.draw(ctx);
     }
 
     translate(x, y) {
