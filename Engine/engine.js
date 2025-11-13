@@ -253,7 +253,7 @@ export class Drawing {
                 if(expectedDrawingSize != this.elements.length) {
                     this.generate(rule, tries-1);
                 }
-
+                
                 return;
             }
         } while(this.stepSubset(N))
