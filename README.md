@@ -7,5 +7,6 @@ Projekt silnika gramatyk kształtu tworzonego w ramach kursu _Projektowanie wspo
 **index.html:** Strona główna z menu i wyborem  
 **Program0: Kwadraty** Szablon, podstawowa gramatyka kształtu pokazywana na zajęciach. Jedna reguła produkcji  
 **Program1: Kaflowanie**  Dwie reguły produkcji, które odbijają i obracają trójkąt kaflując nim płaszczyznę  
-**Program2: ?**  
+**Program2: Trójkąt Sierpińskiego**  Obracanie ze skalowaniem  
+**Program3: Prostokąty** Dopasowywanie grupy obiektów
 **About:** Strona z bardziej szczegółowym wyjaśnieniem mojej implementacji silnika  
