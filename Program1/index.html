@@ -13,12 +13,13 @@
         }
 
         body {
-            margin: 0;
+            margin: 10;
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            height: 115vh;
             background-color: var(--bg-color);
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: var(--text-color);
@@ -49,7 +50,7 @@
             transition: border-color 0.3s ease;
         }
 
-        canvas:hover {
+        .rule:hover {
             border-color: var(--accent-orange);
         }
 
@@ -91,13 +92,18 @@
 </head>
 <body>
     <h1>Reguły produkcji</h1>
-    <canvas id="canvas2" width="500" height="200"></canvas>
+    <canvas class="rule" id="canvas2" width="500" height="180"></canvas>
+    <br>
+    <canvas class="rule" id="canvas3" width="500" height="180"></canvas>    
+    <br>
+
 
     <h1>Rysunek</h1>
     <canvas id="canvas1" width="500" height="500"></canvas>
 
     <div class="nav">
         <a href="https://kwintaj.github.io/CAD/">Powrót</a>
+        <a id="resetButton">Reset</a>
     </div>
 
     <footer>
@@ -112,6 +118,8 @@ const ctx1 = canvas1.getContext("2d");
 // canvas do wyswietlenia regul produkcji
 const canvas2 = document.getElementById("canvas2");
 const ctx2 = canvas2.getContext("2d");
+const canvas3 = document.getElementById("canvas3");
+const ctx3 = canvas3.getContext("2d");
 
 //=========================================================
 // importowanie klas silnika
@@ -135,30 +143,37 @@ const P_TRIANGLE = new Shape([
 // zdefiniowanie regul produkcji
 let rule1Left = [P_TRIANGLE];
 let rule1Right = [P_TRIANGLE.rotateAround(pointA, -Math.PI/2), P_TRIANGLE];
-let rule1 = new ProductionRule(rule1Left, rule1Right, ctx2, [canvas2.height, canvas2.width]);
-// rule1.draw()
+let rule1 = new ProductionRule(rule1Left, rule1Right, ctx2, [canvas2.width, canvas2.height]);
+rule1.draw()
 
 let rule2Left = [P_TRIANGLE];
 let rule2Right = [P_TRIANGLE.rotateAround(pointA, Math.PI).translate(35*Math.sqrt(2), 35*Math.sqrt(2)), P_TRIANGLE];
-let rule2 = new ProductionRule(rule2Left, rule2Right, ctx2, [canvas2.height, canvas2.width]);
+let rule2 = new ProductionRule(rule2Left, rule2Right, ctx3, [canvas3.width, canvas3.height]);
+rule2.draw();
 
 // zdefiniowanie elementow obrazka startowego
 let startingTriangle = P_TRIANGLE.translate(250, 255); 
 
 // zdefiniowanie obrazka
-let drawing = new Drawing([startingTriangle], ctx1, [canvas1.height, canvas1.width]);
+let drawing = new Drawing([startingTriangle], ctx1, [canvas1.width, canvas1.height]);
 
 //=========================================================
 // rozpoczecie rysowania
 drawing.draw();
 
-canvas1.addEventListener("click", (event) => {
+canvas2.addEventListener("click", (event) => {
     drawing.generate(rule1, 100);
     drawing.draw();
 });
 
-canvas2.addEventListener("click", (event) => {
+canvas3.addEventListener("click", (event) => {
     drawing.generate(rule2, 100);
+    drawing.draw();
+});
+
+const resetButton = document.getElementById("resetButton");
+resetButton.addEventListener("click", (event) => {
+    drawing = new Drawing([startingTriangle], ctx1, [canvas1.width, canvas1.height]);
     drawing.draw();
 });
         
