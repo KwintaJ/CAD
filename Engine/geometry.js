@@ -42,7 +42,7 @@ export class Marker {
         this.f = f;
 
         // skala (w stosunku do normy 1.0)
-        this.s = 1;
+        this.s = s;
         
         // typ markera (int)
         this.t = t;
@@ -57,8 +57,8 @@ export class Marker {
     }
 
     draw(ctx) {
-        let b = this.p.translate(0, -10).rotate(this.p, this.f);
-        let c = this.p.translate(5, -6).rotate(this.p, this.f);
+        let b = this.p.translate(0, -10).rotate(this.p, this.f).scale(this.p, this.s);
+        let c = this.p.translate(5, -6).rotate(this.p, this.f).scale(this.p, this.s);
 
         ctx.beginPath();
         ctx.moveTo(this.p.x, this.p.y);
@@ -159,7 +159,7 @@ export class Shape {
     calculateCircumference() {
         let sum = 0;
         for (let i = 0; i < this.lines.length; i++) {
-            sum += this.lines[i].length;
+            sum += this.lines[i].length();
         }
         return sum;
     }

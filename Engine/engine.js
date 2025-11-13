@@ -68,7 +68,7 @@ function checkMarkers(mkA, mkB) {
     // wyliczenie skali
     let s = mkB.s / mkA.s;
 
-    mkA = mkB.scaleAround(new Point(0, 0), s);
+    mkA = mkA.scaleAround(new Point(0, 0), s);
 
     // wyliczenie wektora przesuniecia
     let dx = mkB.p.x - mkA.p.x;
@@ -90,7 +90,7 @@ function checkSimilarity(shA, shB) {
     // wyliczenie skali
     let s = shB.circumference / shA.circumference;
 
-    shA = shB.scaleAround(new Point(0, 0), s);
+    shA = shA.scaleAround(new Point(0, 0), s);
 
     // wyliczenie wektora przesuniecia
     let dx = shB.centerOfMass.x - shA.centerOfMass.x;
@@ -99,6 +99,7 @@ function checkSimilarity(shA, shB) {
     if(shA.translate(dx, dy).equals(shB)) {
         return [f, dx, dy, s];
     }
+
     return [-1, -1, -1, -1];
 }
 
@@ -158,19 +159,21 @@ export class Drawing {
         this.dimensions = d;
     }
 
-    // "odchudzanie" i mieszanie zbioru elementow - usuwamy duplikaty, elementy poza canvas i losowo mieszamy
+    // "odchudzanie" i mieszanie zbioru elementow
+    // usuwamy duplikaty, elementy poza canvas i elementy za male
+    // i losowo mieszamy
     thinAndShuffle() {
         this.elements = this.elements.filter((p, i, arr) => arr.findIndex(q => q.equals(p)) === i);
         this.elements.sort(() => Math.random() - 0.5);
 
         for(let i = 0; i < this.elements.length; i++) {
             if(this.elements[i] instanceof Marker) {
-                if(this.elements[i].p.outside(this.dimensions)) {
+                if(this.elements[i].p.outside(this.dimensions) || this.elements[i].s < 0.2) {
                     this.elements.splice(i, 1);
                 }
             }
             if(this.elements[i] instanceof Shape) {
-                if(this.elements[i].centerOfMass.outside(this.dimensions)) {
+                if(this.elements[i].centerOfMass.outside(this.dimensions) || this.elements[i].circumference < 10) {
                     this.elements.splice(i, 1);
                 }
             }
@@ -251,7 +254,7 @@ export class Drawing {
                 }
 
                 for(let l = 0; l < rule.right.length; l++) {
-                    this.elements.push(rule.right[l].rotateAround(new Point(0, 0), transformation[0]).translate(transformation[1], transformation[2]))
+                    this.elements.push(rule.right[l].scaleAround(new Point(0, 0), transformation[3]).rotateAround(new Point(0, 0), transformation[0]).translate(transformation[1], transformation[2]))
                 }
 
                 this.thinAndShuffle();
