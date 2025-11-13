@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About SGE</title>
+    <style>
+        :root {
+            --bg-color: #f7f4ef;          /* beżowe tło */
+            --text-color: #222222;        /* czarny tekst */
+            --accent-blue: #7eb6ff;       /* błękitny akcent */
+            --accent-orange: #ffa45c;     /* pomarańczowy akcent */
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-color);
+        }
+
+        main {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+            animation: fadeIn 1.2s ease;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        p {
+            font-size: 1.3rem;
+            color: #444;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        a.button {
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.3s, transform 0.2s;
+            color: white;
+            background: var(--accent-blue);
+        }
+
+        a.button:hover {
+            background: var(--accent-orange);
+            transform: translateY(-2px);
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>O silniku</h1>
+        <p>
+            Każdy rysunek tworzą kształty będące zbiorami odcinków. Oprócz tego silnik implementuje markery, które są punktowymi znacznikami używanymi przez reguły produkcji.
+            <br>
+            Reguła produkcji definiuje dwa zbiory kształtów (i markerów). Jeden z nich <i>jest zastępowany</i> przez drugi w rysunku po zastosowaniu reguły.
+            <br>
+            Implementacja silnika gramatyk kształtu pozwala na dopasowania zbiorów kształtów i markerów przez oboty, translacje i skalowanie.
+            <br>
+            Ta strona pozwala na interaktywne śledzenie powstawanie rysunków przy stosowaniu kilku <i>hard coded</i> gramatyk. Nie można zmieniać rysunków startowych ani reguł produkcji, jedynie wybierać jaka reguła zostanie zastosowana w danej chwili.
+            <br>
+            Kliknięcie w rysunek reguły produkcji spowoduje zastosowanie jej (jeśli to możliwe) w losowym miejscu na rysunku.
+        </p>
+
+        <div class="buttons">
+            <a href="https://kwintaj.github.io/CAD/">Powrót</a>
+        </div>
+
+        <footer>
+            <a href="https://github.com/KwintaJ/CAD/">https://github.com/KwintaJ/CAD/</a>
+            <br>
+            <br>
+
+            © 2025 Jan Kwinta — CAD: Shape Grammar Engine
+        </footer>
+    </main>
+</body>
+</html>
