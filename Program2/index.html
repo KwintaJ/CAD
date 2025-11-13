@@ -167,7 +167,7 @@ canvas2.addEventListener("click", (event) => {
 
 const resetButton = document.getElementById("resetButton");
 resetButton.addEventListener("click", (event) => {
-    drawing = new Drawing([startingTriangle], ctx1, [canvas1.width, canvas1.height]);
+    drawing = drawing = new Drawing([startingTriangle, startingMarker], ctx1, [canvas1.width, canvas1.height]);
     drawing.draw();
 });
         
