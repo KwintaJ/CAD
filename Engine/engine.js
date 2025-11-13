@@ -3,6 +3,8 @@
 
 import {Point, Marker, Line, Shape} from './geometry.js';
 
+const POINT_ZERO = new Point(0, 0);
+
 export class ProductionRule {
     constructor(L, R, c, d) {
         this.left = L; // lista ksztaltow i markerow po lewej stronie reguly produkcji 
@@ -14,19 +16,22 @@ export class ProductionRule {
     }
 
     draw() {
+        // punkty do ktorych przesuwamy rysunek reguly
         let middle = [this.dimensions[0] / 2, this.dimensions[1] / 2];
         let quarterLeft = [this.dimensions[0] / 4, this.dimensions[1] / 2];
         let quarterRight = [3 * this.dimensions[0] / 4, this.dimensions[1] / 2];
 
+        // rysowanie lewej strony
         for(let i = 0; i < this.left.length; i++) {
             this.left[i].translate(quarterLeft[0], quarterLeft[1]).draw(this.context);
         }
 
+        // rysowanie prawej strony
         for(let i = 0; i < this.right.length; i++) {
             this.right[i].translate(quarterRight[0], quarterRight[1]).draw(this.context);
         }
 
-        // strzalka
+        // rysowanie strzalki
         this.context.beginPath();
         this.context.moveTo(middle[0]-20, middle[1]);
         this.context.lineTo(middle[0]+20, middle[1]);
@@ -63,12 +68,12 @@ function checkMarkers(mkA, mkB) {
     // wyliczenie kata obrotu
     let f = ((mkB.f - mkA.f)) % (2 * Math.PI);
 
-    mkA = mkA.rotateAround(new Point(0, 0), f);
+    mkA = mkA.rotateAround(POINT_ZERO, f);
 
     // wyliczenie skali
     let s = (mkB.s / mkA.s);
 
-    mkA = mkA.scaleAround(new Point(0, 0), s);
+    mkA = mkA.scaleAround(POINT_ZERO, s);
 
     // wyliczenie wektora przesuniecia
     let dx = (mkB.p.x - mkA.p.x);
@@ -87,14 +92,14 @@ function checkSimilarity(shA, shB) {
     console.log(shB);
 
     // wyliczenie kata obrotu
-    let f = (shB.getNormalAngle() - shA.getNormalAngle()) % (2 * Math.PI);
+    let f = shB.getNormalAngle() - shA.getNormalAngle() % (2 * Math.PI);
 
-    shA = shA.rotateAround(new Point(0, 0), f);
+    shA = shA.rotateAround(POINT_ZERO, f);
 
     // wyliczenie skali
     let s = shB.circumference / shA.circumference;
 
-    shA = shA.scaleAround(new Point(0, 0), s);
+    shA = shA.scaleAround(POINT_ZERO, s);
 
     // wyliczenie wektora przesuniecia
     let dx = shB.centerOfMass.x - shA.centerOfMass.x;
@@ -276,7 +281,7 @@ export class Drawing {
                 }
 
                 for(let l = 0; l < rule.right.length; l++) {
-                    this.elements.push(rule.right[l].scaleAround(new Point(0, 0), transformation[3]).rotateAround(new Point(0, 0), transformation[0]).translate(transformation[1], transformation[2]))
+                    this.elements.push(rule.right[l].scaleAround(POINT_ZERO, transformation[3]).rotateAround(POINT_ZERO, transformation[0]).translate(transformation[1], transformation[2]))
                 }
 
                 this.thinAndShuffle();
@@ -288,12 +293,5 @@ export class Drawing {
                 return;
             }
         } while(this.stepSubset(N))
-    }
-
-    // debug
-    print() {
-        for(let i = 0; i < this.elements.length; i++) {
-            console.log(this.elements[i]);
-        }
     }
 }

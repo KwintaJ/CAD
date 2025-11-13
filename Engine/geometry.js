@@ -48,6 +48,7 @@ export class Marker {
         this.t = t;
     }
 
+    // sprawdza, czy dwa obiekty Marker sa takie same
     equals(other) {
         if (!(other instanceof Marker)) return false;
         if (this.t != other.t) return false
@@ -56,6 +57,7 @@ export class Marker {
         return true;
     }
 
+    // wyrysowanie markera
     draw(ctx) {
         let b = this.p.translate(0, -10).rotate(this.p, this.f).scale(this.p, this.s);
         let c = this.p.translate(5, -6).rotate(this.p, this.f).scale(this.p, this.s);
