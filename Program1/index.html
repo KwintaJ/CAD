@@ -135,30 +135,30 @@ const P_TRIANGLE = new Shape([
 // zdefiniowanie regul produkcji
 let rule1Left = [P_TRIANGLE];
 let rule1Right = [P_TRIANGLE.rotateAround(pointA, -Math.PI/2), P_TRIANGLE];
-let rule1 = new ProductionRule(rule1Left, rule1Right, ctx2);
+let rule1 = new ProductionRule(rule1Left, rule1Right, ctx2, [canvas2.height, canvas2.width]);
 // rule1.draw()
 
 let rule2Left = [P_TRIANGLE];
-let rule2Right = [P_TRIANGLE.rotateAround(pointA, Math.PI).translate(50*Math.sqrt(2), 50*Math.sqrt(2)), P_TRIANGLE];
-let rule2 = new ProductionRule(rule2Left, rule2Right, ctx2);
+let rule2Right = [P_TRIANGLE.rotateAround(pointA, Math.PI).translate(35*Math.sqrt(2), 35*Math.sqrt(2)), P_TRIANGLE];
+let rule2 = new ProductionRule(rule2Left, rule2Right, ctx2, [canvas2.height, canvas2.width]);
 
 // zdefiniowanie elementow obrazka startowego
 let startingTriangle = P_TRIANGLE.translate(250, 255); 
 
 // zdefiniowanie obrazka
-let drawing = new Drawing([startingTriangle], ctx1);
+let drawing = new Drawing([startingTriangle], ctx1, [canvas1.height, canvas1.width]);
 
 //=========================================================
 // rozpoczecie rysowania
 drawing.draw();
 
 canvas1.addEventListener("click", (event) => {
-    drawing.generate(rule1);
+    drawing.generate(rule1, 100);
     drawing.draw();
 });
 
 canvas2.addEventListener("click", (event) => {
-    drawing.generate(rule2);
+    drawing.generate(rule2, 100);
     drawing.draw();
 });
         

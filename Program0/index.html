@@ -100,6 +100,7 @@
 
     <div class="nav">
         <a href="https://kwintaj.github.io/CAD/">Powrót</a>
+        <a id="resetButton">Reset</a>
     </div>
 
     <footer>
@@ -141,8 +142,8 @@ const P_MARKER = new Marker(pointA, 0, 1);
 // zdefiniowanie reguly produkcji
 let ruleLeft = [P_MARKER];
 let ruleRight = [P_MARKER.translate(60, -60), P_SQUARE.translate(-50, -50)]
-let rule1 = new ProductionRule(ruleLeft, ruleRight, ctx2);
-// rule1.draw()
+let rule1 = new ProductionRule(ruleLeft, ruleRight, ctx2, [canvas2.width, canvas2.height]);
+rule1.draw()
 
 // zdefiniowanie elementow obrazka startowego
 let startingSquare1 = P_SQUARE.translate(200, 200); 
@@ -150,7 +151,7 @@ let startingMarker1 = P_MARKER.translate(310, 190);
 let startingMarker2 = P_MARKER.rotate(Math.PI).translate(190, 310);
 
 // zdefiniowanie obrazka
-let drawing = new Drawing([startingSquare1, startingMarker1, startingMarker2], ctx1);
+let drawing = new Drawing([startingSquare1, startingMarker1, startingMarker2], ctx1, [canvas1.width, canvas1.height]);
 
 //=========================================================
 // rozpoczecie rysowania
@@ -158,8 +159,14 @@ drawing.draw();
 
 // za kazdym kliknieciem myszka stosujemy regule produkcji w kazdym
 // miejscu gdzie znajdziemy dopasowanie i rysujemy nowy rysunek
-canvas1.addEventListener("click", (event) => {
-    drawing.generate(rule1);
+canvas2.addEventListener("click", (event) => {
+    drawing.generate(rule1, 20);
+    drawing.draw();
+});
+
+const resetButton = document.getElementById("resetButton");
+resetButton.addEventListener("click", (event) => {
+    drawing = new Drawing([startingSquare1, startingMarker1, startingMarker2], ctx1, [canvas1.height, canvas1.width]);
     drawing.draw();
 });
 </script>

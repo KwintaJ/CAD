@@ -17,6 +17,12 @@ export class Point {
         return new Point((this.x - g.x) * Math.cos(f) - (this.y - g.y) * Math.sin(f) + g.x,
                          (this.x - g.x) * Math.sin(f) + (this.y - g.y) * Math.cos(f) + g.y);
     }
+
+    outside(d) {
+        if(this.x < -15 || this.y < -15) return true;
+        if(this.x > d[0] +15 || this.y > d[1] + 15) return true;
+        return false;
+    }
 }
 
 

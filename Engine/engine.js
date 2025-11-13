@@ -4,12 +4,39 @@
 import {Point, Marker, Line, Shape} from './geometry.js';
 
 export class ProductionRule {
-    constructor(L, R, c) {
+    constructor(L, R, c, d) {
         this.left = L; // lista ksztaltow i markerow po lewej stronie reguly produkcji 
         this.right = R; // lista ksztaltow i markerow po prawej stronie reguly produkcji 
                         // przesuniecie, obrot i skala oznaczony jest na elementach z prawej strony
                         // strony reguly produkcji sa rownane do lewego gornego rogu
         this.context = c;
+        this.dimensions = d;
+    }
+
+    draw() {
+        let middle = [this.dimensions[0] / 2, this.dimensions[1] / 2];
+        let quarterLeft = [this.dimensions[0] / 4, this.dimensions[1] / 2];
+        let quarterRight = [3 * this.dimensions[0] / 4, this.dimensions[1] / 2];
+
+        for(let i = 0; i < this.left.length; i++) {
+            this.left[i].translate(quarterLeft[0], quarterLeft[1]).draw(this.context);
+        }
+
+        for(let i = 0; i < this.right.length; i++) {
+            this.right[i].translate(quarterRight[0], quarterRight[1]).draw(this.context);
+        }
+
+        // strzalka
+        this.context.beginPath();
+        this.context.moveTo(middle[0]-20, middle[1]);
+        this.context.lineTo(middle[0]+20, middle[1]);
+        this.context.lineTo(middle[0]+18, middle[1]-2);
+        this.context.moveTo(middle[0]+20, middle[1]);
+        this.context.lineTo(middle[0]+18, middle[1]+2);
+
+        this.context.strokeStyle = "#111111";
+        this.context.lineWidth = 1;
+        this.context.stroke();
     }
 }
 
@@ -118,24 +145,35 @@ function compareFitting(one, two, N, C) {
 }
 
 export class Drawing {
-    constructor(e, c) {
+    constructor(e, c, d) {
         this.elements = e; // lista kwadratow i markerow
         this.context = c;
         this.subset = [];
+        this.dimensions = d;
     }
 
-    // "odchudzanie" i mieszanie zbioru elementow - usuwamy duplikaty i losowo mieszamy
+    // "odchudzanie" i mieszanie zbioru elementow - usuwamy duplikaty, elementy poza canvas i losowo mieszamy
     thinAndShuffle() {
         this.elements = this.elements.filter((p, i, arr) => arr.findIndex(q => q.equals(p)) === i);
         this.elements.sort(() => Math.random() - 0.5);
-        console.log(this.elements.length);
+
+        for(let i = 0; i < this.elements.length; i++) {
+            if(this.elements[i] instanceof Marker) {
+                if(this.elements[i].p.outside(this.dimensions)) {
+                    this.elements.splice(i, 1);
+                }
+            }
+            if(this.elements[i] instanceof Shape) {
+                if(this.elements[i].centerOfMass.outside(this.dimensions)) {
+                    this.elements.splice(i, 1);
+                }
+            }
+        }
     }
 
     // przedstawianie rysunka na kanwie
     draw() {
-        this.thinAndShuffle();
-
-        this.context.clearRect(0, 0, canvas1.width, canvas1.height);
+        this.context.clearRect(0, 0, this.dimensions[0], this.dimensions[1]);
         for(let i = 0; i < this.elements.length; i++) {
             this.elements[i].draw(this.context);
         }
@@ -174,11 +212,15 @@ export class Drawing {
     }
 
     // generowanie kolejnego rysunka stosujac regule produkcji r
-    generate(rule) {
+    generate(rule, tries) {
+        if(tries <= 0) return;
+
         let N = rule.left.length; // liczba elementow lewej strony reguly
         if(N > this.elements.length) {
             return;
         }
+
+        let expectedDrawingSize = (this.elements.length - N) + rule.right.length;
 
         // znajdywanie dopasowan:
         // wybieramy N-elementowy podzbior elementow rysunka
@@ -203,10 +245,13 @@ export class Drawing {
                 }
 
                 for(let l = 0; l < rule.right.length; l++) {
-                    // TO DO
-                    // dopisac, jezeli rysunek sie nie zmienia
-                    // generacja w innym miejscu
                     this.elements.push(rule.right[l].rotateAround(new Point(0, 0), transformation[0]).translate(transformation[1], transformation[2]))
+                }
+
+                this.thinAndShuffle();
+
+                if(expectedDrawingSize != this.elements.length) {
+                    this.generate(rule, tries-1);
                 }
 
                 return;
