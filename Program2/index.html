@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>?</title>
+    <title>Trójkąt Sierpińskiego</title>
     <style>
         :root {
             --bg-color: #f7f4ef;          /* beżowe tło */
@@ -13,12 +13,13 @@
         }
 
         body {
-            margin: 0;
+            margin: 10;
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            height: 115vh;
             background-color: var(--bg-color);
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: var(--text-color);
@@ -49,7 +50,7 @@
             transition: border-color 0.3s ease;
         }
 
-        canvas:hover {
+        .rule:hover {
             border-color: var(--accent-orange);
         }
 
@@ -90,22 +91,91 @@
     </style>
 </head>
 <body>
-    <h1>Reguły produkcji</h1>
-    <canvas id="canvas2" width="500" height="200"></canvas>
+    <h1>Reguła produkcji</h1>
+    <canvas class="rule" id="canvas2" width="500" height="180"></canvas>
+    <br>
 
     <h1>Rysunek</h1>
     <canvas id="canvas1" width="500" height="500"></canvas>
+    <br>
+
+    Kliknij na regułę produkcji aby generować.
 
     <div class="nav">
         <a href="https://kwintaj.github.io/CAD/">Powrót</a>
+        <a id="resetButton">Reset</a>
     </div>
 
     <footer>
         © 2025 Jan Kwinta — CAD: Shape Grammar Engine
     </footer>
 
-    <script>
+<script type="module">
+//=========================================================
+// canvas glowne
+const canvas1 = document.getElementById("canvas1");
+const ctx1 = canvas1.getContext("2d");
+// canvas do wyswietlenia regul produkcji
+const canvas2 = document.getElementById("canvas2");
+const ctx2 = canvas2.getContext("2d");
 
-    </script>
+//=========================================================
+// importowanie klas silnika
+import {Point, Marker, Line, Shape} from '../Engine/geometry.js';
+import {ProductionRule, Drawing} from '../Engine/engine.js';
+
+//=========================================================
+// PRYMITYWY
+const pointA = new Point(0, 0);
+const pointB = new Point(0, 50);
+const pointC = new Point(50, 0);
+
+const P_TRIANGLE = new Shape([
+                   new Line(pointA, pointB),
+                   new Line(pointB, pointC),
+                   new Line(pointC, pointA)]);
+
+//=========================================================
+// DEFINICJE
+
+// zdefiniowanie regul produkcji
+let rule1Left = [P_TRIANGLE];
+let rule1Right = [P_TRIANGLE.rotateAround(pointA, -Math.PI/2), P_TRIANGLE];
+let rule1 = new ProductionRule(rule1Left, rule1Right, ctx2, [canvas2.width, canvas2.height]);
+rule1.draw()
+
+let rule2Left = [P_TRIANGLE];
+let rule2Right = [P_TRIANGLE.rotateAround(pointA, Math.PI).translate(35*Math.sqrt(2), 35*Math.sqrt(2)), P_TRIANGLE];
+let rule2 = new ProductionRule(rule2Left, rule2Right, ctx3, [canvas3.width, canvas3.height]);
+rule2.draw();
+
+// zdefiniowanie elementow obrazka startowego
+let startingTriangle = P_TRIANGLE.translate(250, 255); 
+
+// zdefiniowanie obrazka
+let drawing = new Drawing([startingTriangle], ctx1, [canvas1.width, canvas1.height]);
+
+//=========================================================
+// rozpoczecie rysowania
+drawing.draw();
+
+canvas2.addEventListener("click", (event) => {
+    drawing.generate(rule1, 100);
+    drawing.draw();
+});
+
+canvas3.addEventListener("click", (event) => {
+    drawing.generate(rule2, 100);
+    drawing.draw();
+});
+
+const resetButton = document.getElementById("resetButton");
+resetButton.addEventListener("click", (event) => {
+    drawing = new Drawing([startingTriangle], ctx1, [canvas1.width, canvas1.height]);
+    drawing.draw();
+});
+        
+</script>
+
 </body>
 </html>

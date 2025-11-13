@@ -65,13 +65,16 @@ function checkMarkers(mkA, mkB) {
 
     mkA = mkA.rotateAround(new Point(0, 0), f);
 
+    // wyliczenie skali
+    let s = mkB.s / mkA.s;
+
+    mkA = mkB.scaleAround(new Point(0, 0), s);
+
     // wyliczenie wektora przesuniecia
     let dx = mkB.p.x - mkA.p.x;
     let dy = mkB.p.y - mkA.p.y;;
 
-    // TODO skalowanie
-
-    return [f, dx, dy, 1];
+    return [f, dx, dy, s];
 }
 
 // funkcja sprawdza czy dwa ksztalty sa podobne
@@ -84,14 +87,17 @@ function checkSimilarity(shA, shB) {
 
     shA = shA.rotateAround(new Point(0, 0), f);
 
+    // wyliczenie skali
+    let s = shB.circumference / shA.circumference;
+
+    shA = shB.scaleAround(new Point(0, 0), s);
+
     // wyliczenie wektora przesuniecia
     let dx = shB.centerOfMass.x - shA.centerOfMass.x;
     let dy = shB.centerOfMass.y - shA.centerOfMass.y;
 
-    // TODO skalowanie
-
     if(shA.translate(dx, dy).equals(shB)) {
-        return [f, dx, dy, 1];
+        return [f, dx, dy, s];
     }
     return [-1, -1, -1, -1];
 }
@@ -253,7 +259,7 @@ export class Drawing {
                 if(expectedDrawingSize != this.elements.length) {
                     this.generate(rule, tries-1);
                 }
-                
+
                 return;
             }
         } while(this.stepSubset(N))

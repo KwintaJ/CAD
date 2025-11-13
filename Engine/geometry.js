@@ -18,6 +18,13 @@ export class Point {
                          (this.x - g.x) * Math.sin(f) + (this.y - g.y) * Math.cos(f) + g.y);
     }
 
+    // skalowanie punktu wzgledem punktu g o wspolczynnik k
+    scale(g, k) {
+        return new Point(g.x + k * (this.x - g.x),
+                         g.y + k * (this.y - g.y));
+    }
+
+    // sprawdzenie czy punkt jest poza ramami canvas
     outside(d) {
         if(this.x < -15 || this.y < -15) return true;
         if(this.x > d[0] +15 || this.y > d[1] + 15) return true;
@@ -27,12 +34,15 @@ export class Point {
 
 
 export class Marker {
-    constructor(p, f, t) {
+    constructor(p, f, s, t) {
         // wspolrzedne
         this.p = p;
 
         // kat obrotu w radianach
         this.f = f;
+
+        // skala (w stosunku do normy 1.0)
+        this.s = 1;
         
         // typ markera (int)
         this.t = t;
@@ -61,15 +71,23 @@ export class Marker {
     }
 
     translate(x, y) {
-        return new Marker(this.p.translate(x, y), this.f, this.t);
+        return new Marker(this.p.translate(x, y), this.f, this.s, this.t);
     }
 
     rotate(f) {
-        return new Marker(this.p.rotate(this.p, f), this.f + f, this.t);
+        return new Marker(this.p.rotate(this.p, f), this.f + f, this.s, this.t);
     }
 
     rotateAround(g, f) {
-        return new Marker(this.p.rotate(g, f), this.f + f, this.t);
+        return new Marker(this.p.rotate(g, f), this.f + f, this.s, this.t);
+    }
+
+    scale(k) {
+        return new Marker(this.p.scale(this.p, k), this.f, this.s * k, this.t);
+    }
+
+    scaleAround(g, k) {
+        return new Marker(this.p.scale(g, k), this.f, this.s * k, this.t);
     }
 }
 
@@ -90,6 +108,10 @@ export class Line {
         ctx.stroke();
     }
 
+    length() {
+        return Math.sqrt((this.a.x - this.b.x) ** 2 + (this.a.y - this.b.y) ** 2);
+    }
+
     translate(x, y) {
         return new Line(this.a.translate(x, y), this.b.translate(x, y));
     }
@@ -97,12 +119,17 @@ export class Line {
     rotate(g, f) {
         return new Line(this.a.rotate(g, f), this.b.rotate(g, f));
     }
+
+    scale(g, k) {
+        return new Line(this.a.scale(g, k), this.b.scale(g, k));
+    }
 }
 
 export class Shape {
     constructor(e) {
         this.lines = e;
-        this.centerOfMass = this.calculateCenterOfMass()
+        this.centerOfMass = this.calculateCenterOfMass();
+        this.circumference = this.calculateCircumference();
     }
     
     calculateCenterOfMass() {
@@ -127,6 +154,14 @@ export class Shape {
         }
 
         return new Point(sumX / uniquePoints.length, sumY / uniquePoints.length);
+    }
+
+    calculateCircumference() {
+        let sum = 0;
+        for (let i = 0; i < this.lines.length; i++) {
+            sum += this.lines[i].length;
+        }
+        return sum;
     }
 
     // metoda zwraca kat miedzy osia X a odcinkiem 
@@ -183,6 +218,22 @@ export class Shape {
         let newLines = [];
         for (let i = 0; i < this.lines.length; i++) {
             newLines.push(this.lines[i].rotate(g, f));
+        }
+        return new Shape(newLines);
+    }
+
+    scale(k) {
+        let newLines = [];
+        for (let i = 0; i < this.lines.length; i++) {
+            newLines.push(this.lines[i].scale(this.centerOfMass, k));
+        }
+        return new Shape(newLines);
+    }
+
+    scaleAround(g, k) {
+        let newLines = [];
+        for (let i = 0; i < this.lines.length; i++) {
+            newLines.push(this.lines[i].scale(g, k));
         }
         return new Shape(newLines);
     }
