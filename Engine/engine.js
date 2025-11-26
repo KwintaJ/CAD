@@ -87,9 +87,9 @@ function checkMarkers(mkA, mkB) {
 function checkSimilarity(shA, shB) {
     if (shA.lines.length !== shB.lines.length) return [-1, -1, -1, -1];
 
-    console.log(".");
-    console.log(shA);
-    console.log(shB);
+    // console.log(".");
+    // console.log(shA);
+    // console.log(shB);
 
     // wyliczenie kata obrotu
     let f = shB.getNormalAngle() - shA.getNormalAngle() % (2 * Math.PI);
@@ -178,7 +178,7 @@ function compareFitting(one, two, N, C) {
 
 export class Drawing {
     constructor(e, c, d) {
-        this.elements = e; // lista kwadratow i markerow
+        this.elements = e; // lista ksztaltow i markerow
         this.context = c;
         this.subset = [];
         this.dimensions = d;
